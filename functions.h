@@ -20,6 +20,5 @@ void enterFile(File *file);
 void solve(int* ans, int x, File *file);
 void delete(int pos, File *file);
 void mergeSort(int** array, int n);
-void resize(int** array, int size);
 void sort(File* file);
 #endif //INC_1_FUNCTIONS_H

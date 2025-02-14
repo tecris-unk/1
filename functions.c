@@ -75,7 +75,6 @@ void solve(int* ans, int x, File *file)
         system("pause");
         exit(0);
     }
-
     for(int i = 0;i<file->size;++i)
     {
         if(file->arr[i] < x){
@@ -96,14 +95,6 @@ void delete(int pos, File *file)
     _chsize(fileno(file->myFile), file->size);
     fseek(file->myFile, pos, SEEK_SET);
 }
-void resize(int** array, int size)
-{
-    int *temp = NULL;
-    temp = (int*)realloc(*array, sizeof(int) * size);
-    if(temp == NULL){printf("memory cant be allocated\n");free(temp);}
-    else{*array = (int*)temp;}
-}
-
 void sort(File* file)
 {
 
@@ -117,7 +108,6 @@ void sort(File* file)
     mergeSort(&file->arr, file->size);
     rewind(file->myFile);
     fwrite(file->arr, sizeof(int), file->size, file->myFile);
-    //fwrite(buffer, sizeof(buffer),size,file->myFile);
     _chsize(fileno(file->myFile), ftell(file->myFile));
     fclose(file->myFile);
 }

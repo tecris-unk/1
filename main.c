@@ -26,10 +26,12 @@ int main()
     printf("Here is changed array\n");
     outFile(file.name);
     printf("\n");
+
     sort(&file);
     printf("Here is your sorted file\n");
     outFile(file.name);
     printf("\n");
+
     system("pause");
     return 0;
 }
