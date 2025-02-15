@@ -31,13 +31,11 @@ fclose(file->myFile);
 printf("Number of elements less than X are %d\n", ans);
 printf("Here is changed array\n");
 outFile(file->name);
-printf("\n");
 
 sort(file);
 
 printf("Here is your sorted file\n");
 outFile(file->name);
-printf("\n");
 }
 void initFile(File *file)
 {
@@ -113,6 +111,7 @@ void outFile(char* filename)
     {
         printf("%d ", buffer[i]);
     }
+    printf("\n");
     free(buffer);
     fclose(f);
 }
