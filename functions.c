@@ -109,7 +109,6 @@ void delete(int pos, File *file)
 }
 void sort(File* file)
 {
-
     file->myFile = fopen(file->name, "r+b");
     if(!file->myFile)
     {
