@@ -3,6 +3,18 @@
 //
 
 #include "functions.h"
+void initFile(File *file)
+{
+    file->name = (char*)malloc(sizeof(char)*20);
+    printf("Enter filename\n");
+    if (!fgets(file->name, 20, stdin)){
+        printf("\nWrong filename");
+        system("pause");
+        exit(1);
+    }
+    file->name[strlen(file->name)-1] = '\0';
+    file->size = 0;
+}
 void setNumber(int* number)
 {
     int isInvalid = 0;

@@ -13,7 +13,7 @@
 #include <io.h>
 #include "structures.h"
 
-
+void initFile(File *file);
 void setNumber(int* number);
 void outFile(char* filename);
 void enterFile(File *file);

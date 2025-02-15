@@ -4,14 +4,7 @@
 int main()
 {
     File file;
-    file.name = (char*)malloc(sizeof(char)*20);
-    printf("Enter filename\n");
-    if (!fgets(file.name, 20, stdin)){
-        printf("\nWrong filename");
-        return 1;
-    }
-    file.name[strlen(file.name)-1] = '\0';
-    file.size = 0;
+    initFile(&file);
 
     enterFile(&file);
     outFile(file.name);
