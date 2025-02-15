@@ -3,6 +3,42 @@
 //
 
 #include "functions.h"
+
+void solve(File *file)
+{
+
+printf("\nEnter a number\n");
+int x;
+setNumber(&x);
+
+int ans = 0;
+file->myFile = fopen(file->name, "r+b");
+if(!file->myFile)
+{
+    printf("Cant open file\n");
+    system("pause");
+    exit(0);
+}
+for(int i = 0;i<file->size;++i)
+{
+    if(file->arr[i] < x){
+    ans++;
+    delete(i--, file);
+    }
+}
+fclose(file->myFile);
+
+printf("Number of elements less than X are %d\n", ans);
+printf("Here is changed array\n");
+outFile(file->name);
+printf("\n");
+
+sort(file);
+
+printf("Here is your sorted file\n");
+outFile(file->name);
+printf("\n");
+}
 void initFile(File *file)
 {
     file->name = (char*)malloc(sizeof(char)*20);
@@ -14,6 +50,8 @@ void initFile(File *file)
     }
     file->name[strlen(file->name)-1] = '\0';
     file->size = 0;
+    enterFile(file);
+    outFile(file->name);
 }
 void setNumber(int* number)
 {
@@ -78,24 +116,7 @@ void outFile(char* filename)
     free(buffer);
     fclose(f);
 }
-void solve(int* ans, int x, File *file)
-{
-    file->myFile = fopen(file->name, "r+b");
-    if(!file->myFile)
-    {
-        printf("Cant open file\n");
-        system("pause");
-        exit(0);
-    }
-    for(int i = 0;i<file->size;++i)
-    {
-        if(file->arr[i] < x){
-            (*ans)++;
-            delete(i--, file);
-        }
-    }
-    fclose(file->myFile);
-}
+
 void delete(int pos, File *file)
 {
     for (int i = pos; i + 1 < file->size; ++i)
