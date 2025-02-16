@@ -33,7 +33,6 @@ void solve(File *file)
 printf("\nEnter a number\n");
 int x;
 setNumber(&x);
-
 int ans = 0;
 openFile(file);
 int num, pos = 0;
