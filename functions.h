@@ -18,6 +18,6 @@ void setNumber(int* number);
 void outFile(char* filename);
 void enterFile(File *file);
 void solve(File *file);
-void delete(int pos, File *file, int flag);
+void delete(int pos, File *file);
 void sort(File* file);
 #endif //INC_1_FUNCTIONS_H

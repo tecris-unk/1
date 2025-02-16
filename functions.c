@@ -29,7 +29,6 @@ void openFile(File *file)
 }
 void solve(File *file)
 {
-
 printf("\nEnter a number\n");
 int x;
 setNumber(&x);
@@ -40,7 +39,7 @@ while(fread(&num, sizeof(int), 1, file->myFile))
 {
     if(num < x){
     ans++;
-    delete(pos--, file, 0);
+    delete(pos--, file);
     }
     pos++;
 }
@@ -62,7 +61,7 @@ void setNumber(int* number)
         isInvalid = 0;
         int i = 0;
         *number = 0;
-        char digits[50];
+        char digits[10];
         scanf("%s", digits);
         int negative = 1;
         if(digits[0] == '-'){negative = -1;i++;}
@@ -133,7 +132,7 @@ void swapInFile(int i, int j, File *file)
         fseek(file->myFile, pos2, SEEK_SET);
         fwrite(&num1, sizeof(int), 1, file->myFile);
 }
-void delete(int pos, File *file, int flag)
+void delete(int pos, File *file)
 {
     int num;
     for (int i = pos+1; i < file->size; i++) {
