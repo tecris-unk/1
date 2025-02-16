@@ -7,5 +7,7 @@ int main(int n_arg, char *arg[])
     initFile(&file, n_arg, arg);
 
     solve(&file);
+
+    deleteFile(&file);
     system("pause");
 }

@@ -177,3 +177,8 @@ void sort(File* file)
     }
     fclose(file->myFile);
 }
+void deleteFile(File *file)
+{
+    remove(file->name);
+    free(file->name);
+}
