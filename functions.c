@@ -3,40 +3,6 @@
 //
 
 #include "functions.h"
-
-void solve(File *file)
-{
-
-printf("\nEnter a number\n");
-int x;
-setNumber(&x);
-
-int ans = 0;
-file->myFile = fopen(file->name, "r+b");
-if(!file->myFile)
-{
-    printf("Cant open file\n");
-    system("pause");
-    exit(0);
-}
-for(int i = 0;i<file->size;++i)
-{
-    if(file->arr[i] < x){
-    ans++;
-    delete(i--, file);
-    }
-}
-fclose(file->myFile);
-
-printf("Number of elements less than X are %d\n", ans);
-printf("Here is changed array\n");
-outFile(file->name);
-
-sort(file);
-
-printf("Here is your sorted file\n");
-outFile(file->name);
-}
 void initFile(File *file)
 {
     file->name = (char*)malloc(sizeof(char)*20);
@@ -51,6 +17,45 @@ void initFile(File *file)
     enterFile(file);
     outFile(file->name);
 }
+void openFile(File *file)
+{
+    file->myFile = fopen(file->name, "r+b");
+    if(!file->myFile)
+    {
+        printf("Cant open file\n");
+        system("pause");
+        exit(0);
+    }
+}
+void solve(File *file)
+{
+
+printf("\nEnter a number\n");
+int x;
+setNumber(&x);
+
+int ans = 0;
+openFile(file);
+int num, pos = 0;
+while(fread(&num, sizeof(int), 1, file->myFile))
+{
+    if(num < x){
+    ans++;
+    delete(pos--, file, 0);
+    }
+    pos++;
+}
+fclose(file->myFile);
+
+printf("Number of elements less than X are %d\n", ans);
+printf("Here is changed array\n");
+outFile(file->name);
+
+sort(file);
+printf("Here is your sorted file\n");
+outFile(file->name);
+}
+
 void setNumber(int* number)
 {
     int isInvalid = 0;
@@ -79,7 +84,6 @@ void enterFile(File *file)
 {
     printf("enter size of the array\n");
     setNumber(&file->size);
-    file->arr = (int*)malloc(file->size * sizeof(int));
     file->myFile = fopen(file->name, "wb");
     if(!file->myFile)
     {
@@ -88,17 +92,16 @@ void enterFile(File *file)
         exit(0);
     }
     printf("enter array elements\n");
-    for(int i = 0;i<file->size;++i)
-    {
-        setNumber(&file->arr[i]);
+    int num;
+    for(int i = 0;i<file->size;++i) {
+        setNumber(&num);
+        fwrite(&num, sizeof(int), 1, file->myFile);
     }
-    fwrite(file->arr, sizeof(int), file->size, file->myFile);
     fclose(file->myFile);
     printf("File has been written\n");
 }
 void outFile(char* filename)
 {
-    int* buffer = (int*)malloc(sizeof(int) * 256);
     FILE *f = fopen(filename, "r+b");
     if(!f)
     {
@@ -106,71 +109,67 @@ void outFile(char* filename)
         system("pause");
         exit(0);
     }
-    unsigned int size = fread(buffer, sizeof(int), 256, f);
-    for(int i = 0;i<size;++i)
+    int num;
+    while(fread(&num, sizeof(int), 1, f))
     {
-        printf("%d ", buffer[i]);
+        printf("%d ", num);
     }
     printf("\n");
-    free(buffer);
     fclose(f);
 }
-
-void delete(int pos, File *file)
+void swapInFile(int i, int j, File *file)
 {
-    for (int i = pos; i + 1 < file->size; ++i)
-        file->arr[i] = file->arr[i + 1];
+        int num1, num2;
+        int pos1 = i * (int)sizeof(int), pos2 = j * (int)sizeof(int);
 
-    file->size--;
-    rewind(file->myFile);
-    fwrite(file->arr, sizeof(int), file->size, file->myFile);
-    _chsize(fileno(file->myFile), file->size);
-    fseek(file->myFile, pos, SEEK_SET);
+        fseek(file->myFile, pos1, SEEK_SET);
+        fread(&num1, sizeof(int), 1, file->myFile);
+
+        fseek(file->myFile, pos2, SEEK_SET);
+        fread(&num2, sizeof(int), 1, file->myFile);
+
+        fseek(file->myFile, pos1, SEEK_SET);
+        fwrite(&num2, sizeof(int), 1, file->myFile);
+
+        fseek(file->myFile, pos2, SEEK_SET);
+        fwrite(&num1, sizeof(int), 1, file->myFile);
+}
+void delete(int pos, File *file, int flag)
+{
+    int num;
+    for (int i = pos+1; i < file->size; i++) {
+
+        int readPos = i * (int)sizeof(int);
+        int writePos = (i-1) * (int)sizeof(int);
+
+        fseek(file->myFile, readPos, SEEK_SET);
+        fread(&num, sizeof(int), 1, file->myFile);
+
+        fseek(file->myFile, writePos, SEEK_SET);
+        fwrite(&num, sizeof(int), 1, file->myFile);
+    }
+    if(!flag){file->size--;}
+    int POS = pos * (int)sizeof(int);
+    _chsize(fileno(file->myFile), ftell(file->myFile));
+    fseek(file->myFile, POS, SEEK_SET);
 }
 void sort(File* file)
 {
-    file->myFile = fopen(file->name, "r+b");
-    if(!file->myFile)
+    openFile(file);
+    int num1;
+    for(int i = 0;i < file->size-1; ++i)
     {
-        printf("Cant open file\n");
-        system("pause");
-        exit(0);
-    }
-    mergeSort(&file->arr, file->size);
-    rewind(file->myFile);
-    fwrite(file->arr, sizeof(int), file->size, file->myFile);
-    _chsize(fileno(file->myFile), ftell(file->myFile));
-    fclose(file->myFile);
-}
-void mergeSort(int** array, int n)
-{
-    int right, rend;
-    int i, j, m;
-    int* newArray = calloc(n, sizeof(int) );
-    if(newArray == NULL){printf("memory cant be allocated\n");return;}
-    for (int k = 1; k < n; k<<=1)
-    {
-        for (int left = 0; left + k < n; left += k<<1)
+        int pos1 = i * (int)sizeof(int);
+        fseek(file->myFile, pos1, SEEK_SET);
+        fread(&num1, sizeof(int), 1, file->myFile);
+        int num2;
+        for(int j = i; j<file->size; ++j)
         {
-            right = left + k;
-            rend = right + k;
-            if (rend > n) rend = n;
-            m = left; i = left; j = right;
-            while (i < right && j < rend)
-            {
-                if ((*array)[i] >= (*array)[j]) {newArray[m] = (*array)[i++]; }
-                else {newArray[m] = (*array)[j++];}
-                m++;
-            }
-            while (i < right)
-                newArray[m++] = (*array)[i++];
-
-            while (j < rend)
-                newArray[m++] = (*array)[j++];
-
-            for (i = left; i < rend; i++)
-                (*array)[i] = newArray[i];
+            int pos2 = j * (int)sizeof(int);
+            fseek(file->myFile, pos2, SEEK_SET);
+            fread(&num2, sizeof(int), 1, file->myFile);
+            if(num1 < num2){ swapInFile(i, j, file);}
         }
     }
-    free(newArray);
+    fclose(file->myFile);
 }

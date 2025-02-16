@@ -8,7 +8,6 @@
 
 typedef struct{
     FILE *myFile;
-    int* arr;
     char* name;
     int size;
 }File;

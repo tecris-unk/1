@@ -13,11 +13,11 @@
 #include "structures.h"
 
 void initFile(File *file);
+void openFile(File *file);
 void setNumber(int* number);
 void outFile(char* filename);
 void enterFile(File *file);
 void solve(File *file);
-void delete(int pos, File *file);
-void mergeSort(int** array, int n);
+void delete(int pos, File *file, int flag);
 void sort(File* file);
 #endif //INC_1_FUNCTIONS_H
