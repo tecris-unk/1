@@ -106,7 +106,7 @@ void enterFile(File *file)
 }
 void outFile(char* filename)
 {
-    FILE *f = fopen(filename, "r+b");
+    FILE *f = fopen(filename, "rb");
     if(!f)
     {
         printf("Cant open file\n");
