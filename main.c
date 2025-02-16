@@ -1,10 +1,10 @@
 
 #include "functions.h"
 
-int main()
+int main(int n_arg, char *arg[])
 {
     File file;
-    initFile(&file);
+    initFile(&file, n_arg, arg);
 
     solve(&file);
     system("pause");

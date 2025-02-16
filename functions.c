@@ -3,16 +3,22 @@
 //
 
 #include "functions.h"
-void initFile(File *file)
+void initFile(File *file, int n_arg, char *arg[])
 {
-    file->name = (char*)malloc(sizeof(char)*20);
-    printf("Enter filename\n");
-    if (!fgets(file->name, 20, stdin)){
-        printf("\nWrong filename");
-        system("pause");
-        exit(1);
+    if (n_arg > 1){
+        file->name = (char*)malloc(sizeof(arg[1]));
+        file->name = arg[1];
     }
-    file->name[strlen(file->name)-1] = '\0';
+    else {
+        file->name = (char*)malloc(sizeof(char)*20);
+        //ограничение на название файла 20 символов.
+        printf("Enter file name: ");
+        if (!fgets(file->name, 20, stdin)){
+            printf("\nWrong file name");
+            exit(1);
+        }
+        file->name[strlen(file->name)-1] = '\0';
+    }
     file->size = 0;
     enterFile(file);
     outFile(file->name);
@@ -146,7 +152,7 @@ void delete(int pos, File *file)
         fseek(file->myFile, writePos, SEEK_SET);
         fwrite(&num, sizeof(int), 1, file->myFile);
     }
-    if(!flag){file->size--;}
+    file->size--;
     int POS = pos * (int)sizeof(int);
     _chsize(fileno(file->myFile), ftell(file->myFile));
     fseek(file->myFile, POS, SEEK_SET);

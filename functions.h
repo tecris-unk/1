@@ -12,7 +12,7 @@
 #include <io.h>
 #include "structures.h"
 
-void initFile(File *file);
+void initFile(File *file, int n_arg, char *arg[]);
 void openFile(File *file);
 void setNumber(int* number);
 void outFile(char* filename);
