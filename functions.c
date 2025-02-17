@@ -10,7 +10,7 @@ void initFile(File *file, int n_arg, char *arg[])
         file->name = arg[1];
     }
     else {
-        file->name = (char*)malloc(sizeof(char)*20);
+        file->name = (char*)malloc(sizeof(char)*24);
         //ограничение на название файла 20 символов.
         printf("Enter file name: ");
         if (!fgets(file->name, 20, stdin)){
@@ -18,6 +18,8 @@ void initFile(File *file, int n_arg, char *arg[])
             exit(1);
         }
         file->name[strlen(file->name)-1] = '\0';
+        char bin[5] = ".bin" ; bin[4] ='\0';
+        file->name = strcat(file->name,bin);
     }
     file->size = 0;
     enterFile(file);
@@ -121,40 +123,35 @@ void outFile(char* filename)
     printf("\n");
     fclose(f);
 }
+void readNum(int pos, int *num, File *file)
+{
+    fseek(file->myFile, pos * (int)sizeof(int), SEEK_SET);
+    fread(num, sizeof(int), 1, file->myFile);
+}
+void writeNum(int pos, int *num, File *file)
+{
+    fseek(file->myFile, pos * (int)sizeof(int), SEEK_SET);
+    fwrite(num, sizeof(int), 1, file->myFile);
+}
 void swapInFile(int i, int j, File *file)
 {
         int num1, num2;
-        int pos1 = i * (int)sizeof(int), pos2 = j * (int)sizeof(int);
-
-        fseek(file->myFile, pos1, SEEK_SET);
-        fread(&num1, sizeof(int), 1, file->myFile);
-
-        fseek(file->myFile, pos2, SEEK_SET);
-        fread(&num2, sizeof(int), 1, file->myFile);
-
-        fseek(file->myFile, pos1, SEEK_SET);
-        fwrite(&num2, sizeof(int), 1, file->myFile);
-
-        fseek(file->myFile, pos2, SEEK_SET);
-        fwrite(&num1, sizeof(int), 1, file->myFile);
+        readNum(i, &num1, file);
+        readNum(j, &num2, file);
+        writeNum(i, &num2, file);
+        writeNum(j, &num1, file);
 }
 void delete(int pos, File *file)
 {
     int num;
-    for (int i = pos+1; i < file->size; i++) {
-
-        int readPos = i * (int)sizeof(int);
-        int writePos = (i-1) * (int)sizeof(int);
-
-        fseek(file->myFile, readPos, SEEK_SET);
-        fread(&num, sizeof(int), 1, file->myFile);
-
-        fseek(file->myFile, writePos, SEEK_SET);
-        fwrite(&num, sizeof(int), 1, file->myFile);
+    for (int i = pos+1; i < file->size; i++)
+    {
+        readNum(i, &num, file);
+        writeNum(i-1, &num, file);
     }
     file->size--;
-    int POS = pos * (int)sizeof(int);
     _chsize(fileno(file->myFile), ftell(file->myFile));
+    int POS = pos * (int)sizeof(int);
     fseek(file->myFile, POS, SEEK_SET);
 }
 void sort(File* file)
@@ -163,16 +160,12 @@ void sort(File* file)
     int num1;
     for(int i = 0;i < file->size-1; ++i)
     {
-        int pos1 = i * (int)sizeof(int);
-        fseek(file->myFile, pos1, SEEK_SET);
-        fread(&num1, sizeof(int), 1, file->myFile);
+        readNum(i, &num1, file);
         int num2;
-        for(int j = i; j<file->size; ++j)
+        for(int j = i+1; j<file->size; ++j)
         {
-            int pos2 = j * (int)sizeof(int);
-            fseek(file->myFile, pos2, SEEK_SET);
-            fread(&num2, sizeof(int), 1, file->myFile);
-            if(num1 < num2){ swapInFile(i, j, file);}
+            readNum(j, &num2, file);
+            if(num1 < num2){swapInFile(i, j, file);}
         }
     }
     fclose(file->myFile);

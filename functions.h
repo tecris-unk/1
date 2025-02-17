@@ -17,6 +17,8 @@ void openFile(File *file);
 void setNumber(int* number);
 void outFile(char* filename);
 void enterFile(File *file);
+void readNum(int pos, int *num, File *file);
+void writeNum(int pos, int *num, File *file);
 void solve(File *file);
 void delete(int pos, File *file);
 void sort(File* file);
