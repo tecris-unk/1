@@ -8,10 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include <string.h>
 #include <io.h>
 #include "structures.h"
-
+void scanString(char **string, int *size);
+void resize(char** array, int size);
+void strCat(char** string, int size, const char* sumString);
+void coutString(char* string);
 void initFile(File *file, int n_arg, char *arg[]);
 void openFile(File *file);
 void setNumber(int* number);
