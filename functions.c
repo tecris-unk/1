@@ -187,12 +187,6 @@ void swapInFile(int i, int j, File *file)
 }
 void delete(int pos, File *file)
 {
-    if(pos + 1 == file->size){
-        file->size--;
-        _chsize(_fileno(file->myFile), (long)file->size * (long)sizeof(int));
-        fseek(file->myFile, pos * (int)sizeof(int), SEEK_SET);
-        return;
-    }
     int num;
     for (int i = pos+1; i < file->size; i++)
     {
@@ -200,7 +194,7 @@ void delete(int pos, File *file)
         writeNum(i-1, &num, file);
     }
     file->size--;
-    _chsize(fileno(file->myFile), ftell(file->myFile));
+    _chsize(_fileno(file->myFile), (long)file->size * (long)sizeof(int));
     fseek(file->myFile, pos * (int)sizeof(int), SEEK_SET);
 }
 void sort(File* file)
