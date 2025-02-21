@@ -15,6 +15,7 @@ void resize(char** array, int size);
 void strCat(char** string, int size, const char* sumString);
 void coutString(char* string);
 void initFile(File *file, int n_arg, char *arg[]);
+void strSize(char *string, int* size);
 void openFile(File *file);
 void setNumber(int* number);
 void outFile(char* filename);

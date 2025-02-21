@@ -5,27 +5,27 @@
 #include "functions.h"
 void setNumber(int* number)
 {
-int isInvalid = 0;
-do {
-isInvalid = 0;
-int i = 0;
-*number = 0;
-char digits[10];
-scanf("%s", digits);
-int negative = 1;
-if(digits[0] == '-'){negative = -1;i++;}
-do {
-if (digits[i] < '0' || digits[i] > '9') {
-printf("Enter a valid number\n");
-isInvalid = 1;
-while(getchar()!='\n');
-break;
-}
-else {*number = *number * 10 + digits[i] - '0'; }
-} while(digits[++i] != 0);
-*number *= negative;
-}while(isInvalid == 1);
-rewind(stdin);
+      int isInvalid = 0;
+      do {
+             isInvalid = 0;
+             int i = 0;
+             *number = 0;
+             char digits[10];
+             scanf("%s", digits);
+             int negative = 1;
+             if(digits[0] == '-'){negative = -1;i++;}
+             do {
+                    if (digits[i] < '0' || digits[i] > '9') {
+                        printf("Enter a valid number\n");
+                        isInvalid = 1;
+                        while(getchar()!='\n');
+                        break;
+                    }
+                    else {*number = *number * 10 + digits[i] - '0'; }
+            } while(digits[++i] != 0);
+      *number *= negative;
+      }while(isInvalid == 1);
+      rewind(stdin);
 }
 void scanString(char **string, int *size)
 {
@@ -74,15 +74,14 @@ void initFile(File *file, int n_arg, char *arg[])
 
     int size = 0;
     if (n_arg > 1){
-        file->name = (char*)malloc(sizeof(arg[1]));
+        file->name = (char*)malloc(sizeof(arg[1]) * 20);
         if(file->name == NULL){fprintf(stderr, "memory cant be allocated\n");exit(1);}
         file->name = arg[1];
+        strSize(file->name, &size);
+        resize(&file->name, size+1);
+        
     }
-    else {
-        printf("Enter file name: ");
-        scanString(&file->name, &size);
-    }
-    printf("%d\n", size);
+
     strCat(&file->name, size, bin);
     free(bin);
     coutString(file->name);
@@ -90,6 +89,13 @@ void initFile(File *file, int n_arg, char *arg[])
     file->size = 0;
     enterFile(file);
     outFile(file->name);
+}
+void strSize(char *string, int* size)
+{
+    while(string[*size] != '\0' && string[*size] != EOF)
+    {
+        (*size)++;
+    }
 }
 void openFile(File *file)
 {
@@ -111,7 +117,6 @@ openFile(file);
 int num, pos = 0;
 while(fread(&num, sizeof(int), 1, file->myFile))
 {
-    printf("%d\n", num);
     if(num < x){
     ans++;
     delete(pos--, file);
